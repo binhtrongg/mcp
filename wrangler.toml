@@ -1,0 +1,30 @@
+name = "lumilink-mcp"
+main = "src/index.ts"
+compatibility_date = "2025-03-10"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+JWT_SECRET = "tXSf02Wk8n71wK4VTzcG4Yl9q4ihF3lU"
+
+[observability]
+enabled = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lumilink_be_prod"
+database_id = "06c17ae2-055f-4c24-a0d6-211ac94c7329"
+
+[ai]
+binding = "AI"
+
+[[durable_objects.bindings]]
+name = "MCP_OBJECT"
+class_name = "LumiLinkMCP"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["LumiLinkMCP"]
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "lumi"
