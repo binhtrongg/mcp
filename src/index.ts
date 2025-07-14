@@ -209,6 +209,7 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
 
 app.mount("/", async (req, env, ctx) => {
   const authHeader = req.headers.get("authorization");
+  console.log(authHeader)
   if (!authHeader) {
     return new Response("Unauthorized", { status: 401 });
   }
