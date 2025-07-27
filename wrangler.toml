@@ -1,4 +1,4 @@
-name = "lumilink-mcp"
+name = "lumilink-mcp-staging"
 main = "src/index.ts"
 compatibility_date = "2025-03-10"
 compatibility_flags = ["nodejs_compat"]

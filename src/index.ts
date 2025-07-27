@@ -3,6 +3,12 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Hono } from "hono";
 import * as jose from "jose";
+import {
+  ENTITY_PRIORITY,
+  PaginatedResult,
+  PaginationParams,
+  UserEntityWithId,
+} from "./type";
 
 interface Env {
   JWT_SECRET: string;
@@ -144,7 +150,9 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
 			SELECT 
 			  kc.*, 
 			  d.name AS dataset_name, 
-			  kb.name AS knowledge_base_name
+			  kb.name AS knowledge_base_name,
+			  kb.id AS knowledge_base_id,
+			  d.id AS dataset_id
 			FROM 
 			  knowledgeChunk kc
 			JOIN 
@@ -167,6 +175,8 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
           content: string;
           dataset_name: string;
           knowledge_base_name: string;
+          knowledge_base_id: number;
+          dataset_id: number;
         }>;
 
         if (knowledgeChunks.length === 0) {
@@ -186,16 +196,22 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
             match.score,
           ])
         );
-
+        const generateSourceUrl = (datasetId: number, kbId: number) => {
+          return `https://lumilink.defikit.net/knowledge/dataset/chunk?id=${datasetId}&kbId=${kbId}`;
+        };
         const knowledgeContext = `\n<KNOWLEDGE_BASE>\n${knowledgeChunks
           .map((chunk, index) => {
             const score = scoreMap.get(chunk.id) || 0;
             const source = `${chunk.knowledge_base_name} > ${chunk.dataset_name}`;
+            const sourceUrl = generateSourceUrl(
+              chunk.dataset_id,
+              chunk.knowledge_base_id
+            );
             return `## Section ${
               index + 1
             }: ${source} (Similarity Score: ${score.toFixed(3)})\n${
               chunk.content
-            }\n`;
+            }\n[Source Name: ${chunk.dataset_name} Source URL: ${sourceUrl}]`;
           })
           .join("\n---\n")}\n</KNOWLEDGE_BASE>`;
 
@@ -204,7 +220,7 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
         };
       }
     );
-  }
+      }
 }
 
 app.mount("/", async (req, env, ctx) => {
@@ -225,10 +241,7 @@ app.mount("/", async (req, env, ctx) => {
       secret
     );
     console.log("payload", payload);
-    // const fakePayload = {
-    //   user_id: "15",
-    //   project_id: "3",
-    // };
+
 
     ctx.props = {
       bearerToken: authHeader,
