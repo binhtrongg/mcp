@@ -197,7 +197,7 @@ export class LumiLinkMCP extends McpAgent<Env, State, Props> {
           ])
         );
         const generateSourceUrl = (datasetId: number, kbId: number) => {
-          return `https://lumilink.defikit.net/knowledge/dataset/chunk?id=${datasetId}&kbId=${kbId}`;
+          return `https://staging.lumilink-fe.pages.dev/knowledge/dataset/chunk?id=${datasetId}&kbId=${kbId}`;
         };
         const knowledgeContext = `\n<KNOWLEDGE_BASE>\n${knowledgeChunks
           .map((chunk, index) => {

@@ -11,8 +11,8 @@ enabled = true
 
 [[d1_databases]]
 binding = "DB"
-database_name = "lumilink_be_prod"
-database_id = "06c17ae2-055f-4c24-a0d6-211ac94c7329"
+database_name = "lumilink_be_staging"
+database_id = "136c0681-e743-453c-81ba-69fd57030829"
 
 [ai]
 binding = "AI"
@@ -27,4 +27,4 @@ new_sqlite_classes = ["LumiLinkMCP"]
 
 [[vectorize]]
 binding = "VECTORIZE"
-index_name = "lumi"
+index_name = "lumi_staging"
